@@ -1,0 +1,7 @@
+services:
+  playwright-test:
+    image: playwright-test
+    command: npm run pageObjects-chrome
+    volumes:
+      - ./playwright-report/:/app/playwright-report
+      - ./test-results/:/app/test-results
