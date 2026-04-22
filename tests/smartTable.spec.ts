@@ -7,7 +7,7 @@ test.describe('Smart Table', () => {
         await pageManager.navigateTo().smartTablePage()
     })
 
-    test('should add a new row and verify it appears in the table @smoke', async ({ pageManager, page }) => {
+    test('should add a new row and verify it appears in the table @smoke', async ({ pageManager }) => {
         const newId = faker.number.int({ min: 100, max: 999 }).toString()
         const firstName = faker.person.firstName()
         const lastName = faker.person.lastName()
@@ -17,58 +17,55 @@ test.describe('Smart Table', () => {
 
         await pageManager.onSmartTablePage().addNewRow(newId, firstName, lastName, username, email, age)
 
-        const addedRow = page.locator('ng2-smart-table tbody tr.ng2-smart-row').filter({ hasText: firstName })
-        await expect(addedRow).toBeVisible()
-        await expect(addedRow).toContainText(lastName)
-        await expect(addedRow).toContainText(email)
+        const addedRow = pageManager.onSmartTablePage().rowByText(firstName)
+        await expect.soft(addedRow).toBeVisible()
+        await expect.soft(addedRow).toContainText(lastName)
+        await expect.soft(addedRow).toContainText(email)
+        expect(test.info().errors).toHaveLength(0)
     })
 
-    test('should update the age of an existing user @smoke', async ({ pageManager, page }) => {
+    test('should update the age of an existing user @smoke', async ({ pageManager }) => {
         const firstName = 'Mark'
         const newAge = '35'
 
         await pageManager.onSmartTablePage().updateAgeByFirstName(firstName, newAge)
 
-        const updatedRow = page.locator('ng2-smart-table tbody tr.ng2-smart-row').filter({ hasText: firstName }).first()
+        const updatedRow = pageManager.onSmartTablePage().rowByText(firstName).first()
         await expect(updatedRow).toContainText(newAge)
     })
 
-    test('should delete a row and verify it is removed from the table', async ({ pageManager, page }) => {
+    test('should delete a row and verify it is removed from the table', async ({ page, pageManager }) => {
         const firstNameToDelete = 'Larry'
 
-        // Verify row exists before delete
-        const rowBeforeDelete = page.locator('ng2-smart-table tbody tr.ng2-smart-row').filter({ hasText: firstNameToDelete })
-        await expect(rowBeforeDelete).toBeVisible()
+        const row = pageManager.onSmartTablePage().rowByText(firstNameToDelete)
+        await expect(row).toBeVisible()
 
         page.on('dialog', dialog => dialog.accept())
         await pageManager.onSmartTablePage().deleteRowByFirstName(firstNameToDelete)
 
-        await expect(rowBeforeDelete).toBeHidden()
+        await expect(row).toBeHidden()
     })
 
-    test('should filter rows by age and show only matching results @smoke', async ({ pageManager, page }) => {
+    test('should filter rows by age and show only matching results @smoke', async ({ pageManager }) => {
         const targetAge = '20'
 
-        await pageManager.onSmartTablePage().filterByAge(targetAge)
+        await pageManager.onSmartTablePage().filterByColumn('Age', targetAge)
 
-        const visibleRows = page.locator('ng2-smart-table tbody tr.ng2-smart-row')
-        const count = await visibleRows.count()
-        for (let i = 0; i < count; i++) {
-            await expect(visibleRows.nth(i)).toContainText(targetAge)
-        }
+        const visibleRows = pageManager.onSmartTablePage().visibleDataRows()
+        // Web-first: wait until every visible row contains the filter value (no unmatched rows)
+        await expect(visibleRows.filter({ hasNotText: targetAge })).toHaveCount(0)
+        await expect(visibleRows.first()).toBeVisible()
     })
 
-    test('should filter rows by email and show only matching results', async ({ pageManager, page }) => {
+    test('should filter rows by email and show only matching results', async ({ pageManager }) => {
         const emailDomain = 'gmail.com'
 
-        await pageManager.onSmartTablePage().filterByEmail(emailDomain)
+        await pageManager.onSmartTablePage().filterByColumn('E-mail', emailDomain)
 
-        const visibleRows = page.locator('ng2-smart-table tbody tr.ng2-smart-row')
-        const count = await visibleRows.count()
-        expect(count).toBeGreaterThan(0)
-        for (let i = 0; i < count; i++) {
-            await expect(visibleRows.nth(i)).toContainText(emailDomain)
-        }
+        const visibleRows = pageManager.onSmartTablePage().visibleDataRows()
+        // Web-first: wait until every visible row contains the filter value (no unmatched rows)
+        await expect(visibleRows.filter({ hasNotText: emailDomain })).toHaveCount(0)
+        await expect(visibleRows.first()).toBeVisible()
     })
 
 })

@@ -92,5 +92,6 @@ All rules in `.claude/rules/` apply to every file in the workspace:
 | [`rules/architecture.md`](rules/architecture.md) | Test architecture, fixtures, config |
 | [`rules/test-writing.md`](rules/test-writing.md) | Writing tests and page objects |
 | [`rules/bug-fixing.md`](rules/bug-fixing.md) | Diagnosing and fixing test failures |
+| [`rules/playwright-best-practices.md`](rules/playwright-best-practices.md) | Official Playwright best practices — locators, assertions, timing, CI |
 
 **Always read the relevant rule files before writing tests or fixing bugs.**
