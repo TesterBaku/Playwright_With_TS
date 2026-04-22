@@ -7,6 +7,8 @@ export type TestOptions = {
     pageManager?: PageManager
 }
 
+export { expect } from '@playwright/test'
+
 export const test = base.extend<TestOptions>({
     globalsQaURL: ['', { option: true }],
     formLayoutsPage: async ({ page }, use) => {
