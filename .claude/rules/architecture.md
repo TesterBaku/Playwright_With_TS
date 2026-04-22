@@ -40,3 +40,17 @@ The web server (`npm run start`) auto-starts when tests run locally. Traces capt
 - Use `@faker-js/faker` for random test data (see `tests/usePageObjects.spec.ts` for examples).
 - Tag smoke tests with `@smoke` in the test title.
 - Screenshots saved to `screenshots/` with timestamp-based filenames.
+
+## Branch Naming (Automation)
+
+All QA automation branches follow this pattern using a sequential QA PR number (`<N>`):
+
+| Type | Pattern | Example |
+|---|---|---|
+| New test / page coverage | `feature/QA-<N>-<short-description>` | `feature/QA-1-smart-table-tests` |
+| Fix failing tests | `bugfix/QA-<N>-<short-description>` | `bugfix/QA-3-datepicker-selector-fix` |
+| Maintenance (config, refactor) | `chore/QA-<N>-<short-description>` | `chore/QA-5-update-page-manager` |
+
+`<N>` increments per batch/PR across the full automation run. Never reuse a number.
+
+**Rule: Never push directly to `main`.** All changes — tests, page objects, config — must go on a branch and be merged via PR with user approval.

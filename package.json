@@ -59,6 +59,7 @@
     "tslib": "^2.3.1",
     "typeface-exo": "0.0.22",
     "web-animations-js": "^2.3.2",
+    "webpack": "^5.106.2",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
@@ -69,7 +70,7 @@
     "@compodoc/compodoc": "^1.1.19",
     "@faker-js/faker": "^8.4.1",
     "@fortawesome/fontawesome-free": "^5.2.0",
-    "@playwright/test": "^1.58.0",
+    "@playwright/test": "^1.59.1",
     "@types/leaflet": "1.2.3",
     "@types/node": "^12.12.70",
     "codelyzer": "^0.0.28",
