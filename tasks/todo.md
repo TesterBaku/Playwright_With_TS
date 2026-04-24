@@ -1,26 +1,44 @@
-# Task Todo
+# Full App Coverage — Test Plan
 
-## Plan
+## Phase 0 — Cleanup
 
-- [x] Audit the current Angular upgrade constraints.
-- [x] Choose Angular 15 as the first migration step.
-- [x] Align Angular, CDK, Nebular, and TypeScript package versions.
-- [x] Refresh the lockfile and installed packages.
-- [x] Run focused Angular build and typecheck validation.
+- [x] Delete `tests/seed.spec.ts` (empty scaffold)
+- [x] Delete `tests/testWithFixture.spec.ts` (duplicates usePageObjects.spec.ts)
+- [x] Clean `tests/uiComponents.spec.ts` — removed: checkboxes, tooltips, dialog box, web tables, date picker; kept: input fields, radio buttons, Lists and dropdowns, sliders
 
-## Progress Notes
+## Phase 1 — Navigation + PageManager Wiring
 
-- Angular 15 is the smallest supported step that lines up with Nebular 11 and Angular CDK 15.
-- Replaced the library with an in-app Smart Table implementation that preserves the test-facing DOM hooks.
-- Installed Playwright browser binaries matching the pinned Playwright version.
-- Stabilized the remaining test failures in `uiComponents`, `usePageObjects`, `dragAndDropWithiFrames`, and `autoWaiting`.
+- [x] Add navigation methods to `page-objects/navigationPage.ts`
+- [x] Create all page object files
+- [x] Register all new pages in `page-objects/pageManager.ts`
+
+## Phase 2 — P0 Dialog
+
+- [x] `page-objects/dialogPage.ts`
+- [x] `tests/dialog.spec.ts`
+
+## Phase 3 — P1 Interactive Components
+
+- [x] `page-objects/toastrPage.ts` + `tests/toastr.spec.ts`
+- [x] `page-objects/windowPage.ts` + `tests/window.spec.ts`
+- [x] `page-objects/tooltipPage.ts` + `tests/tooltip.spec.ts`
+- [x] `page-objects/popoverPage.ts` + `tests/popover.spec.ts`
+- [x] `page-objects/calendarPage.ts` + `tests/calendar.spec.ts`
+- [x] `page-objects/treeGridPage.ts` + `tests/treeGrid.spec.ts`
+
+## Phase 4 — P2 Visual Pages
+
+- [x] `tests/dashboard.spec.ts`
+- [x] `tests/charts.spec.ts`
+
+## Phase 5 — Verify
+
+- [x] `npx tsc --noEmit` passes
+- [x] `npx playwright test --project=chromium` — 48/48 passed
 
 ## Review
 
-- Angular 15 / TypeScript 4.9 migration completed.
-- `ng2-smart-table` was removed and replaced with a custom Smart Table implementation that preserved the existing Playwright-facing selectors and behavior.
-- Validation completed successfully:
-	- `npx ng build` passed.
-	- `npx tsc --noEmit -p src/tsconfig.app.json` passed.
-	- `npx tsc --noEmit -p tsconfig.json` passed.
-	- `npx playwright test` passed with `148 passed`.
+All 48 tests pass in Chromium. 3 bugs found and fixed during the run:
+1. `selectGroupMenuItem` used substring `getByTitle` — "Charts" matched "Echarts". Fixed with `{ exact: true }`.
+2. Tooltip icon card has two "Show Tooltip" buttons — ambiguous locator. Fixed with `.first()`.
+3. Nebular window close button is inside `.buttons` div in `nb-card-header`, not a `nb-window-header`. Fixed selector to `.buttons button`.
