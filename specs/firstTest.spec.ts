@@ -5,7 +5,7 @@ test.beforeAll(async () => {
 });
 
 test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
     await page.getByText('Forms').click();
     await page.getByText('Form Layouts').click();
 })

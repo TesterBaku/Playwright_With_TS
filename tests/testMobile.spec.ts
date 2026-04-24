@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('input fields', async ({ page }, testInfo) => {
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
     if (testInfo.project.name === 'mobile') {
         await page.locator('.sidebar-toggle').click();
     }

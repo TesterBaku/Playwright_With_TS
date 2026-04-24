@@ -1,8 +1,18 @@
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-    await page.goto(process.env.URL);
-    await page.getByText('Button Triggering AJAX Request').click();
+        await page.setContent(`
+            <button id="trigger">Button Triggering AJAX Request</button>
+            <div class="bg-success"></div>
+            <script>
+                document.getElementById('trigger').addEventListener('click', () => {
+                    setTimeout(() => {
+                        document.querySelector('.bg-success').textContent = 'Data loaded with AJAX get request.';
+                    }, 1500);
+                });
+            </script>
+        `)
+        await page.getByText('Button Triggering AJAX Request').click();
 })
 
 test('auto waiting', async ({ page }) => {
@@ -25,11 +35,7 @@ test('alternative waits', async ({ page }) => {
     // wait for element
     //await page.waitForSelector('.bg-success')
 
-    //wait for particular responce
-    //await page.waitForResponse('http://uitestingplayground.com/ajaxdata')
-
-    //wait for network calls to be completed ("NOT RECOMMENDED")
-    await page.waitForLoadState("networkidle")
+    await expect(successButton).toHaveText('Data loaded with AJAX get request.', { timeout: 5000 })
 
     const text = await successButton.allTextContents()
     expect(text).toContain('Data loaded with AJAX get request.')

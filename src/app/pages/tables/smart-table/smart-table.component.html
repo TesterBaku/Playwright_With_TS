@@ -4,7 +4,113 @@
   </nb-card-header>
 
   <nb-card-body>
-    <ng2-smart-table [settings]="settings" [source]="source" (deleteConfirm)="onDeleteConfirm($event)">
+    <ng2-smart-table>
+      <table class="smart-table" role="table">
+        <thead>
+          <tr ng2-st-thead-titles-row>
+            <th class="actions-title">
+              <a class="ng2-smart-action-add-add" (click)="beginAdd()">
+                <i class="nb-plus"></i>
+              </a>
+            </th>
+            <th *ngFor="let column of columns">
+              <span class="ng2-smart-sort-link">{{ column.title }}</span>
+            </th>
+          </tr>
+          <tr class="ng2-smart-filters">
+            <th></th>
+            <th *ngFor="let column of columns">
+              <input-filter>
+                <input
+                  nbInput
+                  fullWidth
+                  type="text"
+                  [placeholder]="column.title"
+                  [value]="filterValues[column.key]"
+                  (input)="updateFilter(column.key, $any($event.target).value)"
+                />
+              </input-filter>
+            </th>
+          </tr>
+          <tr ng2-st-thead-form-row *ngIf="isAddMode">
+            <td class="actions-cell">
+              <ng2-st-actions>
+                <a class="ng2-smart-action-add-create" (click)="createRow()">
+                  <i class="nb-checkmark"></i>
+                </a>
+                <a class="ng2-smart-action-add-cancel" (click)="cancelAdd()">
+                  <i class="nb-close"></i>
+                </a>
+              </ng2-st-actions>
+            </td>
+            <td *ngFor="let column of columns">
+              <input-editor>
+                <input
+                  nbInput
+                  fullWidth
+                  type="text"
+                  [placeholder]="column.title"
+                  [value]="addDraft[column.key]"
+                  (input)="updateAddValue(column.key, $any($event.target).value)"
+                />
+              </input-editor>
+            </td>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngIf="pagedRows.length === 0">
+            <td [attr.colspan]="columns.length + 1" class="empty-state">No data found</td>
+          </tr>
+
+          <tr *ngFor="let row of pagedRows">
+            <td class="actions-cell">
+              <ng-container *ngIf="!isEditing(row)">
+                <a class="ng2-smart-action-edit-edit" (click)="beginEdit(row)">
+                  <i class="nb-edit"></i>
+                </a>
+                <a class="ng2-smart-action-delete-delete" (click)="deleteRow(row)">
+                  <i class="nb-trash"></i>
+                </a>
+              </ng-container>
+
+              <ng-container *ngIf="isEditing(row)">
+                <a class="ng2-smart-action-edit-save" (click)="saveEdit()">
+                  <i class="nb-checkmark"></i>
+                </a>
+                <a class="ng2-smart-action-edit-cancel" (click)="cancelEdit()">
+                  <i class="nb-close"></i>
+                </a>
+              </ng-container>
+            </td>
+
+            <td *ngFor="let column of columns">
+              <ng-container *ngIf="!isEditing(row)">
+                {{ row[column.key] }}
+              </ng-container>
+
+              <ng-container *ngIf="isEditing(row)">
+                <input-editor>
+                  <input
+                    nbInput
+                    fullWidth
+                    type="text"
+                    [placeholder]="column.title"
+                    [value]="editDraft[column.key]"
+                    (input)="updateEditValue(column.key, $any($event.target).value)"
+                  />
+                </input-editor>
+              </ng-container>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ul class="ng2-smart-pagination-nav" *ngIf="pageNumbers.length > 1">
+        <li *ngFor="let page of pageNumbers">
+          <a (click)="goToPage(page)">{{ page }}</a>
+        </li>
+      </ul>
     </ng2-smart-table>
   </nb-card-body>
 </nb-card>

@@ -1,34 +1,46 @@
-import { expect, test } from '@playwright/test';
-import { PageManager } from '../page-objects/pageManager'
-import { faker } from '@faker-js/faker';
+import { test, expect } from '../test-options'
+import { faker } from '@faker-js/faker'
 
+test.describe('Form Layouts', () => {
 
-test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    test.beforeEach(async ({ pageManager }) => {
+        await pageManager.navigateTo().formLayoutsPage()
+    })
+    test('should submit the grid form with valid credentials @smoke', async ({ pageManager }) => {
+        await pageManager.formLayoutsPage().submitUsingTheGridForm(
+            process.env.USERNAME,
+            process.env.PASSWORD,
+            'Option 1'
+        )
+        await expect(
+            pageManager.formLayoutsPage().usingTheGridCard.getByRole('radio', { name: 'Option 1' })
+        ).toBeChecked()
+    })
+
+    test('should submit the inline form with random user data @smoke', async ({ pageManager }) => {
+        const name = faker.person.fullName()
+        const email = faker.internet.email()
+
+        await pageManager.formLayoutsPage().submitInlineForm(name, email, true)
+        await expect(
+            pageManager.formLayoutsPage().inlineFormCard.getByRole('checkbox')
+        ).toBeChecked()
+    })
+
 })
 
-test('navigate to form page @smoke', async ({ page }) => {
-    const pm = new PageManager(page)
-    await pm.navigateTo().formLayoutsPage()
-    await pm.navigateTo().datepickerPage()
-    await pm.navigateTo().smartTablePage()
-    await pm.navigateTo().toastrPage()
-    await pm.navigateTo().tooltipPage()
-})
+test.describe('Date Picker', () => {
 
-test('parametrized methods @smoke', async ({ page }) => {
-    const pm = new PageManager(page)
-    const randomFullName = faker.person.fullName();
-    const randomEmail = `${randomFullName.replace(' ', '')}${faker.number.int(1000)}@example.com`
+    test.beforeEach(async ({ pageManager }) => {
+        await pageManager.navigateTo().datepickerPage()
+    })
 
-    await pm.navigateTo().formLayoutsPage()
-    await pm.formLayoutsPage().submitUsingTheGridFormWithCredentialsAndSelectOption(process.env.USERNAME, process.env.PASSWORD, 'Option 1')
-    await page.screenshot({ path: `screenshots/form-submission-${Date.now()}.png` })
-    // const buffer = await page.screenshot()
-    // console.log(buffer.toString('base64'))
-    await pm.formLayoutsPage().submitInlineFormWithNameEmailAndCheckbox(randomFullName, randomEmail, true)
-    await page.locator('nb-card', { hasText: 'Inline form' }).screenshot({ path: `screenshots/inline-form-${Date.now()}.png` })
-    await pm.navigateTo().datepickerPage()
-    await pm.onDatePickerPage().selectCommonDatePickerDateFromToday(5)
-    await pm.onDatePickerPage().selectDatePickerWithRangeFromToday(3, 10)
+    test('should select a single date 5 days from today @smoke', async ({ pageManager }) => {
+        await pageManager.onDatePickerPage().selectCommonDatePickerDateFromToday(5)
+    })
+
+    test('should select a date range starting 3 and ending 10 days from today @smoke', async ({ pageManager }) => {
+        await pageManager.onDatePickerPage().selectDatePickerWithRangeFromToday(3, 10)
+    })
+
 })

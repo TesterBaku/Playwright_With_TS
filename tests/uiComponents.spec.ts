@@ -1,17 +1,17 @@
-import { expect, test } from '@playwright/test';
+import { test, expect } from '../test-options'
 
 test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
 })
 
-test.describe.only('Form Layout Page @special', () => {
+test.describe('Form Layout Page @special', () => {
     test.describe.configure({ retries: 2 }) //override the global retries just for this describe block
     test.beforeEach(async ({ page }) => {
         await page.getByText('Forms').click();
         await page.getByText('Form Layouts').click();
     })
 
-    test('iput fields', async ({ page }, testInfo) => {
+    test('input fields', async ({ page }, testInfo) => {
         if (testInfo.retry > 0) {
             console.log(`This test is being retried ${testInfo.retry} time(s)`);
         }
@@ -150,7 +150,7 @@ test('web tables', async ({ page }) => {
             const cellValue = await row.locator('td').last().textContent()
             if (age == "200") {
                 expect(await page.getByRole('table').textContent()).toContain('No data found')
-            } else { expect(cellValue).toEqual(age) }
+            } else { expect(cellValue?.trim()).toEqual(age) }
         }
     }
 })
