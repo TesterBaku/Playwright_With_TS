@@ -1,4 +1,4 @@
-import { Page, expect } from "@playwright/test"
+import { Page } from "@playwright/test"
 import { HelperBase } from "./helperBase"
 
 export class DatePickerPage extends HelperBase {
@@ -7,21 +7,20 @@ export class DatePickerPage extends HelperBase {
         super(page)
     }
 
-    async selectCommonDatePickerDateFromToday(numberOfDaysFromToday: number) {
+    async selectCommonDatePickerDateFromToday(numberOfDaysFromToday: number): Promise<string> {
         const calenderInputFiled = this.page.getByPlaceholder('Form Picker')
         await calenderInputFiled.click()
         const dateToAssert = await this.selectDateInTheCalendar(numberOfDaysFromToday)
-
-        await expect(calenderInputFiled).toHaveValue(dateToAssert)
+        return dateToAssert
     }
 
-    async selectDatePickerWithRangeFromToday(firstDayOffset: number, secondDayOffset: number) {
+    async selectDatePickerWithRangeFromToday(firstDayOffset: number, secondDayOffset: number): Promise<string> {
         const calenderInputFiled = this.page.getByPlaceholder('Range Picker')
         await calenderInputFiled.click()
         const firstDateToAssert = await this.selectDateInTheCalendar(firstDayOffset)
         const secondDateToAssert = await this.selectDateInTheCalendar(secondDayOffset)
         const rangeDateToAssert = `${firstDateToAssert} - ${secondDateToAssert}`
-        await expect(calenderInputFiled).toHaveValue(rangeDateToAssert)
+        return rangeDateToAssert
     }
 
     private async selectDateInTheCalendar(numberOfDaysFromToday: number) {
@@ -40,7 +39,10 @@ export class DatePickerPage extends HelperBase {
             calendarMonthYear = await this.page.locator('nb-calendar-view-mode').getByText(expectedYear).textContent()
         }
 
-        await this.page.locator('.day-cell.ng-star-inserted').getByText(expectedDate, { exact: true }).click()
+        await this.page
+            .locator('.day-cell.ng-star-inserted:not(.bounding-month)')
+            .getByText(expectedDate, { exact: true })
+            .click()
         return dateToAssert
     }
 }

@@ -1,35 +1,30 @@
-import { Page } from "@playwright/test"
-import { HelperBase } from "./helperBase"
+import { Page } from '@playwright/test'
+import { HelperBase } from './helperBase'
 
 export class FormLayouts extends HelperBase {
+
+    // Scoped container locators — public so tests can assert against child elements
+    readonly usingTheGridCard = this.page.locator('nb-card', { hasText: 'Using the Grid' })
+    readonly inlineFormCard = this.page.locator('nb-card', { hasText: 'Inline form' })
 
     constructor(page: Page) {
         super(page)
     }
 
-    async submitUsingTheGridFormWithCredentialsAndSelectOption(email: string, password: string, optionTetx: string) {
-        const usingTheGridEmailForm = this.page.locator('nb-card', { hasText: 'Using the Grid' })
-        await usingTheGridEmailForm.getByRole('textbox', { name: "Email" }).fill(email)
-        await usingTheGridEmailForm.getByRole('textbox', { name: "Password" }).fill(password)
-        await usingTheGridEmailForm.getByRole('radio', { name: optionTetx }).check({ force: true })
-        await usingTheGridEmailForm.getByRole('button', { name: 'Sign in' }).click()
-
+    async submitUsingTheGridForm(email: string, password: string, option: string): Promise<void> {
+        await this.usingTheGridCard.getByRole('textbox', { name: 'Email' }).fill(email)
+        await this.usingTheGridCard.getByRole('textbox', { name: 'Password' }).fill(password)
+        await this.usingTheGridCard.getByRole('radio', { name: option }).check({ force: true })
+        await this.usingTheGridCard.getByRole('button', { name: 'Sign in' }).click()
     }
 
-    /**
-     * This method fills the inline form with provided name, email and checks the checkbox based on the boolean value
-     * @param name - should be first and last name
-     * @param email - valid email for test user
-     * @param checkBox - boolean value to check or uncheck the checkbox
-     */
-    async submitInlineFormWithNameEmailAndCheckbox(name: string, email: string, checkBox: boolean) {
-        const inlineForm = this.page.locator('nb-card', { hasText: 'Inline form' })
-        await inlineForm.getByRole('textbox', { name: "Jane Doe" }).fill(name)
-        await inlineForm.getByRole('textbox', { name: "Email" }).fill(email)
-        if (checkBox) {
-            await inlineForm.getByRole('checkbox').check({ force: true })
+    async submitInlineForm(name: string, email: string, rememberMe: boolean): Promise<void> {
+        await this.inlineFormCard.getByRole('textbox', { name: 'Jane Doe' }).fill(name)
+        await this.inlineFormCard.getByRole('textbox', { name: 'Email' }).fill(email)
+        if (rememberMe) {
+            await this.inlineFormCard.getByRole('checkbox').check({ force: true })
         }
-        await inlineForm.getByRole('button', { name: 'Submit' }).click()
+        await this.inlineFormCard.getByRole('button', { name: 'Submit' }).click()
     }
 
 }

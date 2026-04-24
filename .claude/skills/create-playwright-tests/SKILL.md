@@ -17,8 +17,8 @@ Before writing any code:
 1. Read `page-objects/helperBase.ts` — understand the base class API
 2. Read `page-objects/pageManager.ts` — understand how to register a new page
 3. Read `page-objects/navigationPage.ts` — understand navigation method pattern
-4. Read one existing page object (e.g., `page-objects/formLayouts.ts`) — as a reference implementation
-5. Read one existing test file (e.g., `tests/usePageObjects.spec.ts`) — as a reference test
+4. Read `page-objects/formLayouts.ts` — **canonical reference page object**: shows readonly locator properties, scoped container locators, short verb-based method names, no assertions
+5. Read `tests/usePageObjects.spec.ts` — **canonical reference test**: shows correct import, `pageManager` fixture usage, `test.describe` grouping, `faker` data, web-first assertions against page object locators
 
 ### Step 2 — Create Page Objects (one at a time)
 

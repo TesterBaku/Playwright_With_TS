@@ -4,4 +4,67 @@
   nb-card {
     transform: translate3d(0, 0, 0);
   }
+
+  .smart-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid nb-theme(border-basic-color-4);
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  thead th {
+    font-weight: 600;
+  }
+
+  .actions-title,
+  .actions-cell {
+    width: 6rem;
+    white-space: nowrap;
+  }
+
+  .ng2-smart-action-add-add,
+  .ng2-smart-action-add-create,
+  .ng2-smart-action-add-cancel,
+  .ng2-smart-action-edit-edit,
+  .ng2-smart-action-edit-save,
+  .ng2-smart-action-edit-cancel,
+  .ng2-smart-action-delete-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: nb-theme(text-hint-color);
+    cursor: pointer;
+    margin-right: 0.5rem;
+    text-decoration: none;
+  }
+
+  .ng2-smart-action-delete-delete {
+    margin-right: 0;
+  }
+
+  .ng2-smart-pagination-nav {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    list-style: none;
+    padding: 1rem 0 0;
+    margin: 0;
+  }
+
+  .ng2-smart-pagination-nav a {
+    cursor: pointer;
+    text-decoration: none;
+    color: nb-theme(text-basic-color);
+  }
+
+  .empty-state {
+    text-align: center;
+    color: nb-theme(text-hint-color);
+  }
 }

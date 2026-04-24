@@ -2,6 +2,65 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Workflow Orchestration
+
+### Plan Mode Default
+
+- Enter plan mode for any non-trivial task with 3 or more steps or architectural decisions.
+- If execution goes sideways, stop and re-plan immediately.
+- Use plan mode for verification steps, not just implementation.
+- Write detailed specs upfront to reduce ambiguity.
+
+### Subagent Strategy
+
+- Use subagents liberally to keep the main context window clean.
+- Offload research, exploration, and parallel analysis to subagents.
+- For complex problems, use more subagents instead of widening the primary context.
+- Keep each subagent focused on one task.
+
+### Self-Improvement Loop
+
+- After any user correction, update `tasks/lessons.md` with the pattern and prevention rule.
+- Write rules that prevent the same mistake from recurring.
+- Iterate on those lessons until the failure mode stops repeating.
+- Review relevant lessons at session start when working in this project.
+
+### Verification Before Done
+
+- Never mark a task complete without proving it works.
+- Diff behavior against `main` when that comparison is relevant.
+- Ask whether the result would satisfy a staff-level review before closing the task.
+- Run tests, inspect logs, and demonstrate correctness before handing work back.
+
+### Demand Elegance
+
+- For non-trivial changes, pause and check whether there is a simpler or more elegant solution.
+- If a fix feels hacky, re-evaluate and implement the cleaner version when justified.
+- Skip this step for obvious, low-risk fixes to avoid over-engineering.
+- Challenge the design before presenting it as complete.
+
+### Autonomous Bug Fixing
+
+- When given a bug report, move directly to diagnosis and repair.
+- Use logs, errors, and failing tests as the primary inputs.
+- Avoid pushing context-switching work back to the user unless blocked.
+- Treat failing CI or local test failures as action items to resolve end-to-end.
+
+## Task Management
+
+1. Plan first: write the plan to `tasks/todo.md` with checkable items.
+2. Verify plan: check in before starting implementation.
+3. Track progress: mark items complete as work advances.
+4. Explain changes: provide a high-level summary at each step.
+5. Document results: add a review section to `tasks/todo.md`.
+6. Capture lessons: update `tasks/lessons.md` after corrections.
+
+## Core Principles
+
+- Simplicity first: make every change as simple as possible and minimize the code touched.
+- No laziness: find root causes and avoid temporary fixes.
+- Minimal impact: change only what is necessary and avoid creating side effects.
+
 ## Overview
 
 Angular 14 (ngx-admin) application used as a Playwright test target. The Angular app lives in `src/`; tests in `tests/`; page objects in `page-objects/`.
@@ -74,11 +133,11 @@ These are loaded on demand via `read_file`. Load a skill BEFORE taking action in
 **When to load:** When running tests and fixing failures. Runs the execute → diagnose → fix loop (max 5 iterations).
 
 ### create-pull-request
-**File:** `c:\Users\Rufat's\.vscode\extensions\github.vscode-pull-request-github-0.138.0\src\lm\skills\create-pull-request\SKILL.md`
+**File:** `.claude/skills/create-pull-request/SKILL.md`
 **When to load:** When creating a PR for a completed batch. Opens a scoped PR with proper title, description, and base branch.
 
 ### address-pr-comments
-**File:** `c:\Users\Rufat's\.vscode\extensions\github.vscode-pull-request-github-0.138.0\src\lm\skills\address-pr-comments\SKILL.md`
+**File:** `.claude/skills/address-pr-comments/SKILL.md`
 **When to load:** When review comments exist on an open PR. Fetches, classifies, and addresses each comment thread.
 
 ---
