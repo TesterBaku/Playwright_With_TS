@@ -61,6 +61,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - No laziness: find root causes and avoid temporary fixes.
 - Minimal impact: change only what is necessary and avoid creating side effects.
 
+## Post-Change Workflow (MANDATORY)
+
+After **any** code change — tests, page objects, config, README — you MUST:
+
+1. Commit the changes on a feature/bugfix/chore branch (never directly to `main`).
+2. Open a PR using the `create-pull-request` skill.
+3. Review the PR using the `review` skill.
+4. Report the PR URL to the user before closing the task.
+
+This applies to every session where files in `tests/`, `page-objects/`, `.claude/`, or the project root are modified. Do not skip this step even for small changes.
+
 ## Overview
 
 Angular 14 (ngx-admin) application used as a Playwright test target. The Angular app lives in `src/`; tests in `tests/`; page objects in `page-objects/`.
