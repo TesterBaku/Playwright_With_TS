@@ -26,6 +26,7 @@ Original app: [bondar-artem/pw-practice-app](https://github.com/bondar-artem/pw-
 │   ├── helperBase.ts    # Shared base class for all page objects
 │   ├── pageManager.ts   # Central facade — single test entry point
 │   └── *.ts             # Individual page classes
+├── screenshots/         # Test screenshots (gitignored)
 ├── test-options.ts      # Custom fixtures extending Playwright's base test
 ├── playwright.config.ts # Projects, reporters, web server config
 ├── .env                 # Environment variables (not committed)
